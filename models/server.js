@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors'
 import user from '../routes/usuarios.js'
+import { dbConnection } from '../database/config.js';
 
 
 class Server {
@@ -8,6 +9,9 @@ class Server {
     constructor() {
         this.app = express();
 		this.port = process.env.PORT || 3000;
+
+		//Base de datos
+		this.conectarDB();
 
 		//Rutas
 		this.usuariosRoutePath = '/api/usuarios';
@@ -40,6 +44,10 @@ class Server {
 		this.app.listen(this.port, () => {
 			console.log("Servidor corriendo en puerto: ", this.port)
 		})
+	}
+
+	async conectarDB(){
+		await dbConnection();
 	}
 
 }
