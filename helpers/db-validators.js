@@ -17,6 +17,16 @@ const isEmailExist = async( correo = '' ) => {
 
 }
 
+const isLoginValid = async( correo = '' ) => {
+
+    const usuario = await Usuario.findOne({ correo });
+    
+    if( !usuario ) return res.status(400).json({ msg: 'Usuario y/o password son incorrectos - Correo' });
+
+    if( !usuario.estado ) return res.status(400).json({ msg: 'Usuario dehabilitado' });
+
+}
+
 const isIdExist = async( id ) => {
 
     const existeId = await Usuario.findById( id );
@@ -25,9 +35,23 @@ const isIdExist = async( id ) => {
 
 }
 
+const isAdminRol = async( id ) => {
+
+    console.log(id)
+    const { uid, nombre, rol } = await Usuario.findById( id );
+    console.log(uid)
+    console.log(nombre)
+    console.log(rol)
+
+    if( rol !== 'ADMIN_ROLE' ) throw new Error( `El rol '${ rol }' no está autorizado para esta tarea` )
+
+}
+
 export {
     isRolValido,
     isEmailExist,
-    isIdExist
+    isLoginValid,
+    isIdExist,
+    isAdminRol
 }
 
