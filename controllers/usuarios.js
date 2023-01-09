@@ -54,6 +54,8 @@ const usuariosPost = async(req = request, res = response) => {
     const salt = bcryptjs.genSaltSync(); 
     usuario.password = bcryptjs.hashSync( password, salt );
 
+
+
     //*Guardar en DB    
     await usuario.save();
 
@@ -68,8 +70,7 @@ const usuariosDelete = async(req = request, res = response) => {
 
     const { id } = req.params;
 
-    //Borrado fisico
-    // const usuario = await Usuario.findByIdAndDelete( id ); NO ES RECOMENDADO BORRAR AL USUARIO
+    //Borrado fisico - const usuario = await Usuario.findByIdAndDelete( id ); NO ES RECOMENDADO BORRAR AL USUARIO
     const usuario = await Usuario.findByIdAndUpdate( id, { estado: false } );
 
     res.json({

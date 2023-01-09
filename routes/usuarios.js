@@ -1,9 +1,14 @@
 //Creado en el Capitulo 110 
 import { Router } from 'express'
 import { check } from 'express-validator';
+
 import { usuariosGet, usuariosPut, usuariosPost, usuariosDelete } from '../controllers/usuarios.js'
+
 import { isEmailExist, isIdExist, isRolValido } from '../helpers/db-validators.js';
-import { validarCampos } from '../middlewares/validarCampos.js';
+
+import { validarCampos } from '../middlewares/validar-campos.js';
+import { validarJWT } from '../middlewares/validar-jwt.js';
+import { isAdminRole } from '../middlewares/validar-roles.js';
 
 const router = Router(); 
 
@@ -25,11 +30,13 @@ router.post( '/', [
     check( 'password', 'El password debe ser de más de 6 letras' ).isLength({ min: 6 }),
     check( 'rol' ).custom( isRolValido ),
     check( 'correo' ).custom( isEmailExist ),
+    
     validarCampos,
-
 ], usuariosPost );
 
 router.delete( '/:id', [
+    validarJWT,
+    isAdminRole,
     check( 'id', 'No es un id válido' ).isMongoId(),
     check( 'id' ).custom( isIdExist ),
 

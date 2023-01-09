@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors'
-import user from '../routes/usuarios.js'
+import usuarioRouter from '../routes/usuarios.js'
+import authRouter from '../routes/auth.js'
 import { dbConnection } from '../database/config.js';
 
 
@@ -14,6 +15,7 @@ class Server {
 		this.conectarDB();
 
 		//Rutas
+		this.authPath = '/api/auth';
 		this.usuariosRoutePath = '/api/usuarios';
 
 		//Middlewares
@@ -36,7 +38,8 @@ class Server {
 
     routes() {
 
-		this.app.use( this.usuariosRoutePath, user );
+		this.app.use( this.authPath, authRouter );
+		this.app.use( this.usuariosRoutePath, usuarioRouter );
         
     }
 

@@ -37,7 +37,9 @@ const UsuarioSchema = Schema({
 //Capitulo 131 - Para modificar el metodo nativo de mongoose y decirle que no devuelva la contraseña despues de crear el usuario
 UsuarioSchema.methods.toJSON = function() {
 
-    const { __v, password, ...usuario } = this.toObject(); //Lo que hago es desestructurar los valores que no quiero devolver, y el conjunto de los que sobran que si quiero devolver
+    const { __v, password, _id, ...usuario } = this.toObject(); //Lo que hago es desestructurar los valores que no quiero devolver, y el conjunto de los que sobran que si quiero devolver
+
+    usuario.uid = _id;
 
     return usuario; 
 
