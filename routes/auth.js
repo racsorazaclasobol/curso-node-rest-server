@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { authLogin } from '../controllers/auth.js';
+import { authLogin, googleSignIn } from '../controllers/auth.js';
 import { isLoginValid } from '../helpers/db-validators.js';
 import { validarCampos } from '../middlewares/validar-campos.js';
 
@@ -13,6 +13,12 @@ router.post( '/login', [
     check( 'password', 'La contraseña es obligatoria' ).notEmpty(),
     validarCampos,
 ], authLogin );
+
+router.post( '/google', [
+    check( 'id_token', 'El id_token es obligatorio' ).notEmpty(),
+
+    validarCampos,
+], googleSignIn );
 
 
 
