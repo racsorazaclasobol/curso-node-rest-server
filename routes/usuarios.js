@@ -20,7 +20,7 @@ router.put( '/:id', [
     check( 'rol' ).custom( isRolValido ),
     
     validarCampos
- ], usuariosPut );
+], usuariosPut );
 
 router.post( '/', [
     //Capitulo 128

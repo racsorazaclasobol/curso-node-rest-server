@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors'
-import usuarioRouter from '../routes/usuarios.js'
-import authRouter from '../routes/auth.js'
+
+import { AuthRouter, UsuarioRouter, CategoriaRouter, ProductoRouter, BuscarRouter } from '../routes/index.js'
+
 import { dbConnection } from '../database/config.js';
 
 
@@ -15,8 +16,13 @@ class Server {
 		this.conectarDB();
 
 		//Rutas
-		this.authPath = '/api/auth';
-		this.usuariosRoutePath = '/api/usuarios';
+		this.rutasPath = {
+			authPath: '/api/auth',
+			buscarPath: '/api/buscar',
+			usuarioPath: '/api/usuarios',
+			categoriaPath: '/api/categorias',
+			productoPath: '/api/productos'
+		};
 
 		//Middlewares
 		this.middlewares();
@@ -37,9 +43,14 @@ class Server {
 	}
 
     routes() {
+		
+		const { authPath, buscarPath, usuarioPath, categoriaPath, productoPath } = this.rutasPath;
 
-		this.app.use( this.authPath, authRouter );
-		this.app.use( this.usuariosRoutePath, usuarioRouter );
+		this.app.use( authPath, AuthRouter );
+		this.app.use( buscarPath, BuscarRouter )
+		this.app.use( usuarioPath, UsuarioRouter );
+		this.app.use( categoriaPath, CategoriaRouter );
+		this.app.use( productoPath, ProductoRouter );
         
     }
 

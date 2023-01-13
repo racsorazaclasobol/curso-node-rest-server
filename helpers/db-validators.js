@@ -1,5 +1,8 @@
+import { Categoria, Producto } from '../models/index.js'
 import Role from '../models/role.js'
 import Usuario from '../models/usuario.js'
+
+/*  VALIDADORES USUARIOS | AUTH  */
 
 const isRolValido = async(rol = '') => { //Capitulo 130 y 131
 
@@ -21,9 +24,9 @@ const isLoginValid = async( correo = '' ) => {
 
     const usuario = await Usuario.findOne({ correo });
     
-    if( !usuario ) return res.status(400).json({ msg: 'Usuario y/o password son incorrectos - Correo' });
+    if( !usuario ) throw new Error('Usuario y/o password son incorrectos - Correo');
 
-    if( !usuario.estado ) return res.status(400).json({ msg: 'Usuario dehabilitado' });
+    if( !usuario.estado ) throw new Error('Usuario dehabilitado');
 
 }
 
@@ -31,27 +34,64 @@ const isIdExist = async( id ) => {
 
     const existeId = await Usuario.findById( id );
 
-    if( !existeId ) throw new Error( `El id '${ id }' no existe` );
+    if( !existeId ) throw new Error( `El usuario con ID: '${ id }' no existe` );
 
 }
 
-const isAdminRol = async( id ) => {
+/*  VALIDADORES CATEGORIAS | PRODUCTOS  */
 
-    console.log(id)
-    const { uid, nombre, rol } = await Usuario.findById( id );
-    console.log(uid)
-    console.log(nombre)
-    console.log(rol)
+const isIDCategoriaValid = async ( id = '' ) => {
+    
+    const categoria = await Categoria.findById( id );
 
-    if( rol !== 'ADMIN_ROLE' ) throw new Error( `El rol '${ rol }' no está autorizado para esta tarea` )
+    if( !categoria ) throw new Error('La categoría no existe.');
 
 }
+
+const isExistCategoria = async ( nombre = '' ) => {
+
+    const nombreSearch = nombre.toUpperCase();
+
+    const categoria = await Categoria.exists( { nombre: nombreSearch } );
+
+    if( categoria ) throw new Error( `El nombre de categoría ${ nombre } ya existe.` )
+
+}
+
+const isIDProductoValid = async ( id = '' ) => {
+    
+    const query = { _id: id, estado: true }
+    const producto = await Producto.exists( query );
+
+    if( !producto ) throw new Error('El producto no existe.');
+
+}
+
+const isExistProducto = async ( nombre = '' ) => {
+
+    const nombreSearch = nombre.toUpperCase();
+    const query = { nombre: nombreSearch, estado: true }
+    const producto = await Producto.exists( query );
+
+    if( producto ) throw new Error( `El nombre de categoría ${ nombre } ya existe.` )
+
+}
+
+
+
 
 export {
-    isRolValido,
+    //Validadores Usuarios | auth
     isEmailExist,
-    isLoginValid,
     isIdExist,
-    isAdminRol
+    isLoginValid,
+    isRolValido,
+
+    //Validadores Categorias | Productos
+    isExistCategoria,
+    isIDCategoriaValid,
+    isIDProductoValid,
+    isExistProducto,
+
 }
 
