@@ -1,7 +1,8 @@
 import express from 'express';
+import fileUpload from 'express-fileupload';
 import cors from 'cors'
 
-import { AuthRouter, UsuarioRouter, CategoriaRouter, ProductoRouter, BuscarRouter } from '../routes/index.js'
+import { AuthRouter, UsuarioRouter, CategoriaRouter, ProductoRouter, BuscarRouter, UploadRouter } from '../routes/index.js'
 
 import { dbConnection } from '../database/config.js';
 
@@ -21,7 +22,8 @@ class Server {
 			buscarPath: '/api/buscar',
 			usuarioPath: '/api/usuarios',
 			categoriaPath: '/api/categorias',
-			productoPath: '/api/productos'
+			productoPath: '/api/productos',
+			uploadPath: '/api/upload',
 		};
 
 		//Middlewares
@@ -40,17 +42,25 @@ class Server {
 
 		//Directorio público
 		this.app.use( express.static('public') )
+
+		//Manejo de Carga de Archivos
+		this.app.use(fileUpload({
+			useTempFiles : true,
+			tempFileDir : '/tmp/',
+			createParentPath: true,
+		}));
 	}
 
     routes() {
 		
-		const { authPath, buscarPath, usuarioPath, categoriaPath, productoPath } = this.rutasPath;
+		const { authPath, buscarPath, usuarioPath, categoriaPath, productoPath, uploadPath } = this.rutasPath;
 
 		this.app.use( authPath, AuthRouter );
 		this.app.use( buscarPath, BuscarRouter )
 		this.app.use( usuarioPath, UsuarioRouter );
 		this.app.use( categoriaPath, CategoriaRouter );
 		this.app.use( productoPath, ProductoRouter );
+		this.app.use( uploadPath, UploadRouter );
         
     }
 

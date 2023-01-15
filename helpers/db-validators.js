@@ -77,6 +77,18 @@ const isExistProducto = async ( nombre = '' ) => {
 
 }
 
+/* VALIDAR COLECCIONES  */
+
+const coleccionesPermitidas = ( coleccion = '', colecciones = [] ) => {
+
+    const incluida = colecciones.includes( coleccion );
+
+    if( !incluida ) throw new Error( `La coleccion ${ coleccion } no está permitida` );
+
+    return true;
+
+}
+
 
 
 
@@ -92,6 +104,9 @@ export {
     isIDCategoriaValid,
     isIDProductoValid,
     isExistProducto,
+
+    //Validadores Colecciones
+    coleccionesPermitidas,
 
 }
 
